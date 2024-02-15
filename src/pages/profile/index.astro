@@ -1,0 +1,26 @@
+---
+import ProfileModule from '../../modules/ProfileModule.svelte';
+import Layout from '../../layouts/Layout.astro';
+import { prisma } from '../../lib/shared';
+
+const reviews = await prisma.review.findMany({
+	where: {
+		reviewed_user: {
+			id: 1
+		}
+	},
+	include: {
+		create_user: true
+	}
+})
+
+const profile = await prisma.user.findUnique({
+	where: {
+		id: 1
+	}
+})
+---
+
+<Layout title="The CyclersHub">
+	<ProfileModule profile={profile} reviews={reviews} client:only />
+</Layout>

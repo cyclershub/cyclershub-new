@@ -1,0 +1,50 @@
+---
+import type { Prisma } from '@prisma/client';
+import RawLayout from '../../layouts/RawLayout.astro';
+import { prisma } from '../../lib/shared';
+import SearchModule from '../../modules/SearchModule.svelte';
+
+const selectableUserFields: Prisma.UserFindManyArgs["select"] = {
+	address: true,
+	city: true,
+	created_at: true,
+	email: true,
+	first_name: true,
+	last_name: true,
+	phone_number: true,
+	profile_picture: true,
+	profile_description: true,
+	state: true,
+	username: true,
+	zip: true,
+	country: true,
+	lat: true,
+	lng: true,
+	id: true
+}
+
+const users = await prisma.user.findMany({
+	where: {
+		available_to_host: true
+	},
+	select: {
+		...selectableUserFields,
+		
+		incoming_reviews: {
+			select: {
+				create_user: {
+					select: selectableUserFields
+				},
+				created_at: true,
+				rating: true,
+				review: true,
+			}
+		},
+		
+	}
+})
+---
+
+<RawLayout title="Welcome to Astro.">
+	<SearchModule users={users} client:only />
+</RawLayout>

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN "county" TEXT;
+ALTER TABLE "User" ADD COLUMN "lat" REAL;
+ALTER TABLE "User" ADD COLUMN "lng" REAL;

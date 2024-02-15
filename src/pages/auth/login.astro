@@ -1,0 +1,8 @@
+---
+import AuthLayout from '../../layouts/AuthLayout.astro';
+import LoginModule from '../../modules/LoginModule.svelte';
+---
+
+<AuthLayout title="Welcome to Astro.">
+	<LoginModule client:only />
+</AuthLayout>
