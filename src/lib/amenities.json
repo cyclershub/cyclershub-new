@@ -1,0 +1,50 @@
+[
+	{
+		"name": "Bicycle storage",
+		"description": "Providing a secure place for guests to store their bicycles during their stay."
+	},
+	{
+		"name": "Basic repair tools",
+		"description": "Offering tools like tire pumps, wrenches, and patch kits for guests to perform minor bicycle repairs."
+	},
+	{
+		"name": "Laundry facilities",
+		"description": "Allowing guests to do their laundry during their stay, including access to washing machines and dryers."
+	},
+	{
+		"name": "Kitchen access",
+		"description": "Permitting guests to use the kitchen to prepare their meals, including access to cooking utensils, pots, and pans."
+	},
+	{
+		"name": "Bicycle maintenance",
+		"description": "Designating a space where guests can perform more extensive bicycle maintenance and repairs."
+	},
+	{
+		"name": "Local cycling maps/routes",
+		"description": "Offering maps and information about nearby cycling routes and points of interest."
+	},
+	{
+		"name": "Shower facilities",
+		"description": "Providing access to showers for guests to freshen up after a day of cycling."
+	},
+	{
+		"name": "Wi-Fi access",
+		"description": "Offering internet connectivity for guests to stay connected during their stay."
+	},
+	{
+		"name": "Safety equipment",
+		"description": "Providing access to safety equipment like helmets, reflective gear, and bike lights for guests who may need them."
+	},
+	{
+		"name": "Local guides/tours",
+		"description": "Offering guided tours or connecting guests with local guides who can lead them on adventures in the area."
+	},
+	{
+		"name": "Pets allowed",
+		"description": "Allowing guests to bring their pets along for the ride, provided they adhere to certain rules and guidelines."
+	},
+	{
+		"name": "Accessibility features",
+		"description": "Ensuring that accommodations are accessible to guests with disabilities or special needs."
+	}
+]

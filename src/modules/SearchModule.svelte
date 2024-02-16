@@ -17,7 +17,7 @@
 
 	function createMarker(marker: User & { incoming_reviews: Review[] }) {
 		let icon = markerIcon();
-		let leafletMarker = L.marker([marker.lat, marker.lng], { icon });
+		let leafletMarker = L.marker([marker.lat as number, marker.lng as number], { icon });
 
 		leafletMarker.on("click", () => {
 			visible = true;
@@ -36,6 +36,7 @@
 
 		let markerLayers = L.layerGroup();
 		for (let marker of users) {
+			if (!marker.lat || !marker.lng) continue;
 			let m = createMarker(marker);
 			markerLayers.addLayer(m);
 		}
@@ -45,15 +46,17 @@
 		return {
 			destroy: () => {
 				map.remove();
-				map = null;
 			},
 		};
 	}
 
-	const initialView = [39.8283, -98.5795];
 	function createMap(container: HTMLDivElement) {
+		navigator.geolocation.getCurrentPosition((position) => {
+			map.setView([position.coords.latitude, position.coords.longitude], 10);
+		});
+
 		let m = L.map(container, { preferCanvas: true }).setView(
-			initialView,
+	{ lat: 47.751569, lng: 1.675063 },
 			5
 		);
 		L.tileLayer(

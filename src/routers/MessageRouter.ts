@@ -1,12 +1,27 @@
 import { z } from "zod";
-import { t } from "./t";
-import type { Message } from "@prisma/client";
+import { t } from "./context";
 import { observable } from "@trpc/server/observable";
 import { EventEmitter } from "events";
 import { validateJsonWebToken } from "../lib/validateJsonWebToken";
 import { prisma } from "../lib/shared";
+import { v4 as uuidv4 } from 'uuid';
+import { TRPCError } from "@trpc/server";
 
 const messageEventEmitter = new EventEmitter();
+
+const MessageObject = z.object({
+	created_at: z.date(),
+	message: z.string(),
+	receiver: z.object({
+		username: z.string(),
+		avatar: z.string().nullable()
+	}),
+	sender: z.object({
+		username: z.string(),
+		avatar: z.string().nullable()
+	}),
+	uid: z.string().uuid()
+})
 
 export const MessageRouter = t.router({
 	onReceive: t.procedure.input(z.object({
@@ -14,10 +29,10 @@ export const MessageRouter = t.router({
 	})).subscription(async ({input}) => {
 		const user = await validateJsonWebToken(input.accessToken)
 
-		return observable<Message>((emit) => {
-			const onAdd = (data: Message) => {
+		return observable<z.infer<typeof MessageObject>>((emit) => {
+			const onAdd = (data: z.infer<typeof MessageObject>) => {
 				// emit data to client
-				if (data.receiver_id === user.id || data.sender_id === user.id) {
+				if (data.receiver.username === user.username || data.sender.username === user.username) {
 					emit.next(data);
 				}
 			};
@@ -32,16 +47,34 @@ export const MessageRouter = t.router({
 	send: t.procedure.input(z.object({
 		accessToken: z.string(),
 		message: z.string(),
-		recipient: z.number(),
+		recipientUsername: z.string(),
+	})).output(z.object({
+		uid: z.string().uuid()
 	})).mutation(async ({input}) => {
 		const user = await validateJsonWebToken(input.accessToken)
+
+		const uid = uuidv4();
+
+		const recipient = await prisma.user.findUnique({
+			where: {
+				username: input.recipientUsername
+			}
+		})
+
+		if (!recipient) {
+			throw new TRPCError({
+				code: 'BAD_REQUEST',
+				message: 'Recipient not found'
+			})
+		}
 
 		const message = await prisma.message.create({
 			data: {
 				message: input.message,
+				uid,
 				receiver: {
 					connect: {
-						id: input.recipient
+						id: recipient.id
 					}
 				},
 				sender: {
@@ -49,10 +82,29 @@ export const MessageRouter = t.router({
 						id: user.id
 					}
 				}
+			},
+			select: {
+				created_at: true,
+				message: true,
+				receiver: {
+					select: {
+						username: true,
+						avatar: true
+					}
+				},
+				sender: {
+					select: {
+						username: true,
+						avatar: true
+					}
+				},
+				uid: true
 			}
 		})
 
 		messageEventEmitter.emit('add', message)
+
+		return { uid }
 	}),
 	getAll: t.procedure.input(z.object({
 		accessToken: z.string(),
@@ -71,26 +123,56 @@ export const MessageRouter = t.router({
 	}),
 	getConversationMessages: t.procedure.input(z.object({
 		accessToken: z.string(),
-		otherUser: z.string()
-	})).query(async ({input}) => {
+		recipientUsername: z.string()
+	})).output(z.array(MessageObject)).query(async ({input}) => {
 		const user = await validateJsonWebToken(input.accessToken)
+
+		const recipient = await prisma.user.findUnique({
+			where: {
+				username: input.recipientUsername
+			}
+		})
+
+		if (!recipient) {
+			throw new TRPCError({
+				code: 'BAD_REQUEST',
+				message: 'Recipient not found'
+			})
+		}
 
 		const messages = await prisma.message.findMany({
 			where: {
 				OR: [
 					{
 						sender_id: user.id,
-						receiver_id: parseInt(input.otherUser)
+						receiver_id: recipient.id
 					},
 					{
-						sender_id: parseInt(input.otherUser),
+						sender_id: recipient.id,
 						receiver_id: user.id
 					}
 				]
 			},
 			orderBy: {
 				created_at: 'asc'
-			}
+			},
+			select: {
+				created_at: true,
+				message: true,
+				receiver: {
+					select: {
+						username: true,
+						avatar: true
+					}
+				},
+				sender: {
+					select: {
+						username: true,
+						avatar: true
+					}
+				},
+				uid: true
+			},
 		})
 
 		return messages;

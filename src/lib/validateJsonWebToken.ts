@@ -4,20 +4,27 @@ import jwt from "jsonwebtoken"
 import type { User } from "@prisma/client";
 
 export async function validateJsonWebToken(accessToken: string): Promise<User | never> {
-	const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+	try {
+		const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
 
-	const user = await prisma.user.findUnique({
-		where: {
-			id: decoded.id
+		const user = await prisma.user.findUnique({
+			where: {
+				uid: decoded.uid
+			}
+		});
+
+		if (!user) {
+			throw new TRPCError({
+				code: 'BAD_REQUEST',
+				message: 'User not found'
+			});
 		}
-	});
 
-	if (!user) {
+		return user;
+	} catch (e) {
 		throw new TRPCError({
-			code: 'BAD_REQUEST',
-			message: 'User not found'
+			code: 'INTERNAL_SERVER_ERROR',
+			message: 'Invalid access token'
 		});
 	}
-
-	return user;
 }

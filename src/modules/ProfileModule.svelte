@@ -9,19 +9,20 @@
 </script>
 
 <div class="relative min-h-screen">
-	<img class="w-full h-[400px] object-cover my-0" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/cebd17f1-b283-45e5-8600-6ec3edc558fd/dee2aqv-222532a7-8676-4788-b8e3-08d4f5be55e2.png/v1/fill/w_1280,h_640,q_80,strp/profile_banner_by_darkfigure4_dee2aqv-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NjQwIiwicGF0aCI6IlwvZlwvY2ViZDE3ZjEtYjI4My00NWU1LTg2MDAtNmVjM2VkYzU1OGZkXC9kZWUyYXF2LTIyMjUzMmE3LTg2NzYtNDc4OC1iOGUzLTA4ZDRmNWJlNTVlMi5wbmciLCJ3aWR0aCI6Ijw9MTI4MCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.sdy7FtZ92V4tHXX-hTf0PupZmkD7CQoG-BkmOY0_mQg" alt="">
+	<img class="w-full h-[400px] object-cover my-0" src={profile.banner} alt="">
 	<div class="max-w-screen-xl mx-auto w-full relative">
 		<div class="avatar absolute -bottom-36 my-0 left-0">
 			<div class="w-72 rounded-full ring-2 ring-primary ring-offset-transparent ring-offset-2">
-				<img class="object-cover my-0" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+				<img class="object-cover my-0" src={profile.avatar} />
 			</div>
 		</div>
 	</div>
 	<div class="max-w-screen-xl mx-auto w-full relative pl-80 my-8">
 		<h2 class="my-0">{profile.first_name} {profile.last_name}</h2>
 		<span class="text-base">Joined {moment(profile.created_at).format("MMMM DD YYYY")}</span>
-		<p class="text-lg my-4">{profile.profile_description}</p>
+		<p class="text-lg my-4">{profile.biography}</p>
 		<div class="flex flex-row gap-4 my-4">
+			<a href="/profile/{profile.username}/chat" class="btn no-underline">Send Message</a>
 			<a class="btn btn-square"><TwitterLogo size={24} /></a>
 			<a class="btn btn-square"><InstagramLogo size={24} /></a>
 			<a class="btn btn-square"><GithubLogo size={24} /></a>
@@ -49,9 +50,9 @@
 		{#each reviews as review}
 			<div>
 				<div class="flex flex-row gap-4 items-center">
-					<a class="avatar online" href="/profile/{review.create_user.id}">
+					<a class="avatar" href="/profile/{review.create_user.id}">
 						<div class="w-12 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-2">
-							<img src={review.create_user.profile_picture} class="rounded-full my-0">
+							<img src={review.create_user.avatar} class="rounded-full my-0">
 						</div>
 					</a>
 					<div class="flex flex-col">

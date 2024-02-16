@@ -1,0 +1,18 @@
+---
+import ProfileSettingsModule from '../../modules/ProfileSettingsModule.svelte';
+import Layout from '../../layouts/Layout.astro';
+import {getAccessTokenUser} from '../../lib/getAccessTokenUser';
+
+const accessToken = Astro.cookies.get("accessToken")?.value as string;
+
+const user = await getAccessTokenUser(accessToken);
+
+if (!user) {
+	Astro.cookies.delete('accessToken');
+	return Astro.redirect('/auth/login');
+}
+---
+
+<Layout title="The CyclersHub">
+	<ProfileSettingsModule profile={user} client:only />
+</Layout>

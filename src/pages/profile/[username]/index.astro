@@ -1,0 +1,32 @@
+---
+import ProfileModule from '../../../modules/ProfileModule.svelte';
+import Layout from '../../../layouts/Layout.astro';
+import { prisma } from '../../../lib/shared';
+
+const username = Astro.params.username;
+
+const user = await prisma.user.findUnique({
+	where: {
+		username
+	}
+})
+
+if (!user) {
+	return Astro.redirect('/404');
+}
+
+const reviews = await prisma.review.findMany({
+	where: {
+		reviewed_user: {
+			id: user.id
+		}
+	},
+	include: {
+		create_user: true
+	}
+})
+---
+
+<Layout title="The CyclersHub">
+	<ProfileModule profile={user} reviews={reviews} client:only />
+</Layout>

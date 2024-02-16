@@ -1,42 +1,50 @@
 <script script lang="ts">
+	import type { User } from "@prisma/client";
+	import moment from "moment";
+	import Cookies from "js-cookie";
 	import trpc from "../trpc";
-	import type { inferProcedureOutput } from "@trpc/server";
-	import type { AppRouter } from "../pages/api/trpc/[trpc]";
-
-
-	// let messages: inferProcedureOutput<AppRouter["messages"]["getAll"]>[] = [];
+	
 	let conversations = []
 
-	export let accessToken: string;
+	export let user: User;
+
+	const accessToken = Cookies.get("accessToken") as string;
 
 	(async () => {
-		// messages = await trpc.messages.getAll.query({ accessToken });
 		conversations = await trpc.messages.getConversations.query({ accessToken })
-		trpc.messages.onReceive.subscribe(
-			{ accessToken },
-			{
-				onData: (data) => {
-					// messages.push(data);
-					// messages = messages;
-				},
-				onStarted: async () => {
-					// const response = await trpc.messages.send.mutate({
-					// 	accessToken,
-					// 	message: "Hello!",
-					// 	recipient: 1,
-					// });
-				},
-			}
-		);
-	})();
+	})()
 </script>
 
 <div class="max-w-screen-xl w-full mx-auto">
+	<div class="prose prose-sm p-4">
 	<h2>Conversations</h2>
 
 	{#each conversations as conversation}
-		<div>
-			{conversation.receiver.first_name} {conversation.receiver.last_name}
+	{#if conversation.receiver.username === user.username}
+	<a class="flex flex-row gap-4 items-center" href="/profile/{conversation.sender.username}/chat">
+		<div class="avatar">
+			<div class="w-12 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-2">
+				<img src={conversation.sender.avatar} class="rounded-full my-0">
+			</div>
 		</div>
+		<div class="flex flex-col">
+			<h2 class="m-0">{conversation.sender.first_name} {conversation.sender.last_name}</h2>
+			<span>Joined <strong>{moment(conversation.sender.created_at).format("MMMM YYYY")}</strong></span>
+		</div>
+	</a>
+	{:else}
+	<a class="flex flex-row gap-4 items-center" href="/profile/{conversation.receiver.username}/chat">
+		<div class="avatar">
+			<div class="w-12 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-2">
+				<img src={conversation.receiver.avatar} class="rounded-full my-0">
+			</div>
+		</div>
+		<div class="flex flex-col">
+			<h2 class="m-0">{conversation.receiver.first_name} {conversation.receiver.last_name}</h2>
+			<span>Joined <strong>{moment(conversation.receiver.created_at).format("MMMM YYYY")}</strong></span>
+		</div>
+	</a>
+	{/if}
 	{/each}
+</div>
 </div>

@@ -18,6 +18,7 @@ datasource db {
 
 model User {
   id    Int     @id @default(autoincrement())
+	uid String @unique // @db.Uuid
   email String  @unique
 	password String
   first_name  String
@@ -36,15 +37,16 @@ model User {
 	created_at DateTime @default(now())
 	updated_at DateTime @updatedAt
 	available_to_host Boolean @default(false)
-	profile_picture String?
-	profile_description String?
+	avatar String?
+	biography String?
+	banner String?
 	phone_number String?
 	// One user can have many reviews from other users
 	incoming_reviews Review[] @relation("incoming_reviews")
 	outgoing_reviews Review[] @relation("outgoing_reviews")
 
-	favorite_users Favorites[] @relation("favorite_users")
-	favorited_by_users Favorites[] @relation("user_that_is_favorited")
+	favorite_users Favorite[] @relation("favorite_users")
+	favorited_by_users Favorite[] @relation("user_that_is_favorited")
 
 	sent_messages Message[] @relation("sender")
 	received_messages Message[] @relation("receiver")
@@ -54,6 +56,7 @@ model User {
 
 model Review {
 	id    Int     @id @default(autoincrement())
+	uid String @unique // @db.Uuid
 	rating Int
 	review String
 	created_at DateTime @default(now())
@@ -66,8 +69,9 @@ model Review {
 	reviewed_user_id Int
 }
 
-model Favorites {
+model Favorite {
 	id    Int     @id @default(autoincrement())
+	uid String @unique // @db.Uuid
 	created_at DateTime @default(now())
 	updated_at DateTime @updatedAt
 
@@ -80,6 +84,7 @@ model Favorites {
 
 model Message {
 	id    Int     @id @default(autoincrement())
+	uid String @unique // @db.Uuid
 	message String
 	created_at DateTime @default(now())
 	updated_at DateTime @updatedAt

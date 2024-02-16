@@ -12,7 +12,7 @@
 			return;
 		}
 
-		Cookies.set("refresh_token", refreshTokenRequest.refreshToken, {
+		Cookies.set("refreshToken", refreshTokenRequest.refreshToken, {
 			expires: 7,
 		})
 
@@ -25,12 +25,12 @@
 			return;
 		}
 
-		Cookies.set("access_token", accessTokenRequest.accessToken, {
+		Cookies.set("accessToken", accessTokenRequest.accessToken, {
 			expires: 7,
 		})
 
 
-		location.href = "/";
+		location.href = "/profile";
 	}
 
 	let email: string;

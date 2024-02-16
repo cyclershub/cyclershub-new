@@ -2,7 +2,7 @@
 	import type { Review, User } from "@prisma/client";
 	import moment from "moment";
 	import { InstagramLogo, ChatBubble } from "radix-svelte-icons"
-	import EnvelopeOpen from "radix-svelte-icons/src/lib/icons/EnvelopeOpen.svelte";
+	import {EnvelopeOpen} from "radix-svelte-icons";
 
 	export let focused: User & { incoming_reviews: (Review & {create_user: User})[] };
 	export let visible: boolean = false;
@@ -11,9 +11,9 @@
 {#if visible}
 <div class="fixed top-[80px] left-0 w-[400px] h-full bg-base-100 z-[50000] border-r-2 border-r-base-200 prose prose-sm p-4">
 	<div class="flex flex-row gap-4 items-center">
-		<div class="avatar online">
+		<div class="avatar">
 			<div class="w-12 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-2">
-				<img src={focused.profile_picture} class="rounded-full my-0">
+				<img src={focused.avatar} class="rounded-full my-0">
 			</div>
 		</div>
 		<div class="flex flex-col">
@@ -21,7 +21,7 @@
 			<span>Joined <strong>{moment(focused.created_at).format("MMMM YYYY")}</strong></span>
 		</div>
 	</div>
-	<p>{focused.profile_description}</p>
+	<p>{focused.biography}</p>
 
 	<div class="flex gap-4">
 		<button class="btn"><ChatBubble size={20} /> Send Message</button>
@@ -37,9 +37,9 @@
 		{#each focused.incoming_reviews as review}
 			<div>
 				<div class="flex flex-row gap-4 items-center">
-					<a class="avatar online" href="/profile/{review.create_user.id}">
+					<a class="avatar" href="/profile/{review.create_user.id}">
 						<div class="w-12 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-2">
-							<img src={review.create_user.profile_picture} class="rounded-full my-0">
+							<img src={review.create_user.avatar} class="rounded-full my-0">
 						</div>
 					</a>
 					<div class="flex flex-col">

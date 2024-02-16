@@ -1,0 +1,19 @@
+---
+import { GithubLogo } from 'radix-svelte-icons';
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="The CyclersHub">
+	<div class="relative h-[calc(100vh-100px)]">
+		<img src="https://img.freepik.com/free-photo/young-man-riding-bicycle-mountains-early-morning_651396-3154.jpg?w=1380&t=st=1708092812~exp=1708093412~hmac=cb2beeb13180aadc0588f2027caad78550a2ccd1ca7efd9b7973257ea51f4eda" class="absolute top-0 left-0 object-cover w-screen h-full my-0 brightness-[40%]">
+		<div class="relative top-48 left-0 max-w-screen-xl mx-auto w-full">
+			<h1 class="font-bold text-white mb-2">Tours</h1>
+			<p class="text-white max-w-lg">This page is a Work-in-progress. Please tune in at a later point when we've made some progress on it.</p>
+			<p class="text-white max-w-lg">See what other riders are up to! With our Tours feature you can share routes, see where others are in real-time, team up and explore the wide open.</p>
+			<div class="flex gap-4">
+				<a href="https://github.com/cyclershub" class="btn btn-md btn-accent"><GithubLogo size={24} /> Contribute</a>
+			</div>
+		</div>
+	</div>
+	
+</Layout>

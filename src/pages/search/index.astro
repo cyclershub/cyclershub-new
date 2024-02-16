@@ -12,8 +12,8 @@ const selectableUserFields: Prisma.UserFindManyArgs["select"] = {
 	first_name: true,
 	last_name: true,
 	phone_number: true,
-	profile_picture: true,
-	profile_description: true,
+	avatar: true,
+	biography: true,
 	state: true,
 	username: true,
 	zip: true,
@@ -45,6 +45,6 @@ const users = await prisma.user.findMany({
 })
 ---
 
-<RawLayout title="Welcome to Astro.">
+<RawLayout title="Search Hosts | CyclersHub">
 	<SearchModule users={users} client:only />
 </RawLayout>

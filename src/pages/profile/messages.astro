@@ -1,18 +1,21 @@
 ---
 import ProfileMessagesModule from '../../modules/ProfileMessagesModule.svelte';
 import Layout from '../../layouts/Layout.astro';
-import { verifyAccessToken } from "../../lib/verifyAccessToken";
+import { getAccessTokenUser } from "../../lib/getAccessTokenUser";
 
-const accessToken = Astro.cookies.get('access_token')?.value;
+const accessToken = Astro.cookies.get('accessToken')?.value as string;
 
-if (!accessToken || !verifyAccessToken(accessToken)) {
-	Astro.cookies.delete('access_token');
+const user = await getAccessTokenUser(accessToken);
+
+if (!user) {
+	Astro.cookies.delete('accessToken');
 	return Astro.redirect('/auth/login')
+
 }
 
 
 ---
 
 <Layout title="The CyclersHub">
-	<ProfileMessagesModule accessToken={accessToken} client:only />
+	<ProfileMessagesModule user={user} client:only />
 </Layout>

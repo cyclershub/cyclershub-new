@@ -3,13 +3,13 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout title="The CyclersHub">
-	<div class="relative h-[calc(100vh-300px)]">
+	<div class="relative h-[calc(100vh-200px)]">
 		<img src="https://bikepacking.com/wp-content/uploads/2023/09/Kona-Sutra-Review_3.jpg" class="absolute top-0 left-0 object-cover w-screen h-full my-0 brightness-[40%]">
 		<div class="relative top-48 left-0 max-w-screen-xl mx-auto w-full">
 			<h1 class="font-bold text-white mb-2">The CyclersHub</h1>
-			<p class="text-white">Your one stop shop for all things cycling</p>
+			<p class="text-white max-w-lg">Explore the wide-open with other like-minded people from around the globe! Find routes and hosts in other countries and go on an adventure with your favorite two-wheeled companion.</p>
 			<div class="flex gap-4">
-				<a class="btn btn-md btn-accent">Sign Up</a>
+				<a href="/auth/signup" class="btn btn-md btn-accent">Sign Up</a>
 				<a class="btn btn-md">Learn More</a>
 			</div>
 		</div>
@@ -17,25 +17,25 @@ import Layout from '../layouts/Layout.astro';
 	<div class="max-w-screen-xl mx-auto">
 		<h2 class="mb-2">Categories</h2>
 		<div class="flex flex-row gap-4">
-			<a class="w-1/4 aspect-square relative group cursor-pointer">
+			<a class="w-1/4 aspect-square relative group cursor-pointer" href="/parts">
 				<img class="object-cover brightness-75 group-hover:brightness-50 transition-all h-full w-full" src="https://www.siroko.com/blog/c/app/uploads/2022/08/many-different-metal-parts-and-components-of-the-r-2022-08-01-04-40-24-utc.jpeg.webp">
 				<div class="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] opacity-0 group-hover:opacity-100 transition-opacity">
 					<h4 class="text-white">Parts</h4>
 				</div>
 			</a>
-			<a class="w-1/4 aspect-square relative group cursor-pointer">
+			<a class="w-1/4 aspect-square relative group cursor-pointer" href="/setups">
 				<img class="object-cover brightness-75 group-hover:brightness-50 transition-all h-full w-full" src="https://media.tailfin.cc/app/uploads/2022/09/27103838/bike-setup-tips-from-the-experts-silk-road-edition-3-1024x683.jpg">
 				<div class="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] opacity-0 group-hover:opacity-100 transition-opacity">
 					<h4 class="text-white">Setups</h4>
 				</div>
 			</a>
-			<a class="w-1/4 aspect-square relative group cursor-pointer">
+			<a class="w-1/4 aspect-square relative group cursor-pointer" href="/guides">
 				<img class="object-cover brightness-75 group-hover:brightness-50 transition-all h-full w-full" src="https://granfondo-cycling.com/wp-content/uploads/sites/3/2018/12/Gravel_Guide_Issue_10-9.jpg">
 				<div class="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] opacity-0 group-hover:opacity-100 transition-opacity">
 					<h4 class="text-white">Guides</h4>
 				</div>
 			</a>
-			<a class="w-1/4 aspect-square relative group cursor-pointer">
+			<a class="w-1/4 aspect-square relative group cursor-pointer" href="/tours">
 				<img class="object-cover brightness-75 group-hover:brightness-50 transition-all h-full w-full" src="https://www.cyclingabout.com/wp-content/uploads/2018/04/Bicycle-Touring-Patagonia-12-1000x621.jpg">
 				<div class="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] opacity-0 group-hover:opacity-100 transition-opacity">
 					<h4 class="text-white">Tours</h4>

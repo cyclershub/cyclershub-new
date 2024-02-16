@@ -1,11 +1,12 @@
 import { applyWSSHandler } from '@trpc/server/adapters/ws';
 import ws from 'ws';
 import { router } from '../routers';
+import { createContext } from '../routers/context';
 
 const wss = new ws.Server({
   port: 3001,
 });
-const handler = applyWSSHandler({ wss, router: router });
+const handler = applyWSSHandler({ wss, router: router, createContext });
 
 wss.on('connection', (ws) => {
   console.log(`➕➕ Connection (${wss.clients.size})`);

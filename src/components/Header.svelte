@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { HamburgerMenu } from "radix-svelte-icons";
+	import { Bell, HamburgerMenu } from "radix-svelte-icons";
 	import ThemeController from "./ThemeController.svelte";
-
-	
+	import trpc from "../trpc";
+	import Cookies from "js-cookie";
 </script>
 
 <nav class="navbar bg-base-100 border-b-2 border-b-base-200 h-20 sticky top-0 z-10">
@@ -18,20 +18,34 @@
 			<a href="/faq" class="link link-hover">FAQ</a>
 			<a href="/forums" class="link link-hover">Forums</a>
 			<a href="/about" class="link link-hover">About</a>
-			{#if true}
+			{#if Cookies.get("accessToken")}
+			{#await trpc.user.getSelf.query()}
+				<div class="w-12 h-12 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-2 skeleton"></div>
+			{:then user}
 			<div class="dropdown dropdown-end">
-				<div tabindex="0" role="button" class="avatar online">
+				<button tabindex="0" class="btn btn-ghost btn-square">
+					<Bell size={24} />
+				</button>
+				<ul tabindex="0" class="dropdown-content z-[1] menu p-4 shadow bg-base-100 rounded-box w-72">
+					<p>There are no new notifications!</p>
+				</ul>
+			</div>
+			<div class="dropdown dropdown-end">
+				<div tabindex="0" role="button" class="avatar">
 						<div class="w-12 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-2">
-							<img src="https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.87170709.1707782400&semt=ais" class="avatar online rounded-full w-12 h-12 object-cover">
+							<img src={user.avatar} class="avatar rounded-full w-12 h-12 object-cover">
 						</div>
 				</div>
 				<ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
 					<li><a href="/profile">My Profile</a></li>
 					<li><a href="/profile/messages">Messages</a></li>
 					<li><a href="/profile/settings">Settings</a></li>
-					
+					<li><a href="/auth/logout">Log Out</a></li>
 				</ul>
 			</div>
+			{:catch}
+				<a href="/auth/signup" class="btn">Sign Up</a>
+			{/await}
 			{:else}
 				<a href="/auth/signup" class="btn">Sign Up</a>
 			{/if}

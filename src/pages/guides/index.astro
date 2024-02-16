@@ -1,0 +1,19 @@
+---
+import { GithubLogo } from 'radix-svelte-icons';
+import Layout from '../../layouts/Layout.astro';
+---
+
+<Layout title="The CyclersHub">
+	<div class="relative h-[calc(100vh-100px)]">
+		<img src="https://www.stasdock.com/cdn/shop/articles/Banner-bike-parts-maintenance-best-cycle-parts_1024x.jpg?v=1663857058" class="absolute top-0 left-0 object-cover w-screen h-full my-0 brightness-[40%]">
+		<div class="relative top-48 left-0 max-w-screen-xl mx-auto w-full">
+			<h1 class="font-bold text-white mb-2">Guides</h1>
+			<p class="text-white max-w-lg">This page is a Work-in-progress. Please tune in at a later point when we've made some progress on it.</p>
+			<p class="text-white max-w-lg">Don't know what to keep in mind when doing chain maintenance? No problem! Here we'll offer comprehensive guides on bike maintenance and more.</p>
+			<div class="flex gap-4">
+				<a href="https://github.com/cyclershub" class="btn btn-md btn-accent"><GithubLogo size={24} /> Contribute</a>
+			</div>
+		</div>
+	</div>
+	
+</Layout>
