@@ -1,0 +1,167 @@
+---
+import ForumLayout from "../../../../layouts/ForumLayout.astro";
+import { refreshAccessToken } from "../../../../lib/refreshAccessToken";
+import { prisma } from "../../../../lib/shared";
+import Post from "../../../../components/Post.svelte";
+import moment from "moment";
+
+import PostThreadComment from "../../../../components/PostThreadComment.svelte";
+
+
+const threadName = Astro.params.thread;
+const forumName = Astro.params.forum;
+
+const forum = await prisma.forum.findUnique({
+	where: {
+		slug: forumName,
+	},
+});
+
+const thread = await prisma.thread.findUnique({
+	where: {
+		slug: threadName,
+	},
+	include: {
+		user: {
+			include: {
+				_count: {
+					select: {
+						posts: true,
+					}
+				}
+			}
+		},
+		posts: {
+			take: 25,
+			include: {
+				user: {
+					include: {
+						_count: {
+							select: {
+								posts: true
+							}
+						}
+					}
+				},
+			},
+		},
+		_count: {
+			select: {
+				posts: true,
+			},
+		},
+	},
+});
+
+const latestPost = await prisma.post.findFirst({
+	where: {
+		thread: {
+			id: thread.id
+		}
+	},
+	orderBy: {
+		created_at: "desc"
+	},
+	include: {
+		user: true
+	}
+})
+
+const newThreads = await prisma.thread.findMany({
+	orderBy: {
+		created_at: "desc"
+	},
+	include: {
+		forum: true
+	},
+	take: 4
+})
+
+if (!thread) {
+	return Astro.redirect("/404");
+}
+
+await refreshAccessToken(Astro);
+---
+
+<ForumLayout title="The CyclersHub">
+	<div class="max-w-screen-xl mx-auto py-16">
+		<div class="text-sm breadcrumbs">
+			<ul>
+				<li><a href="/forums">Forum</a></li> 
+				<li><a href={`/forums/${forum.slug}`}>{forum.title}</a></li> 
+				<li>{thread.title}</li>
+			</ul>
+		</div>
+		<div class="my-4 h-16 w-full bg-base-200 relative grid grid-cols-[1fr_300px] justify-between items-center px-6">
+			<div class="flex flex-row items-center">
+				<a class="avatar absolute left-6 -top-2" href="/profile/{post.user.uid}">
+					<div class="w-20 rounded-full">
+						<img
+							class="my-0"
+							src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+						/>
+					</div>
+				</a>
+				<div class="flex flex-col text-end ml-28">
+					<h3 class="my-0 text-xl">{thread.user.username}</h3>
+					<span class="my-0 text-xs">{moment(thread.created_at).fromNow()}</span>
+				</div>
+			</div>
+			<div class="grid grid-cols-[1fr_1fr_1.5fr] text-center items-center gap-6">
+				<span class="text-base text-base-content">Replies</span>
+				<span class="text-base text-base-content">Views</span>
+				<span class="text-base text-base-content">Latest Post</span>
+			</div>
+		</div>
+		<div class="bg-base-300">
+			<div class="grid grid-cols-[1fr_300px] p-6 items-start border-b border-b-black">
+				<h1 class="text-xl font-semibold mb-0">{thread.title}</h1>
+				<div class="grid grid-cols-[1fr_1fr_1.5fr] text-center gap-6">
+					<span class="text-sm text-base-content">{thread._count.posts}</span>
+					<span class="text-sm text-base-content">5123</span>
+					<div class="flex flex-col">
+						<span class="text-sm text-base-content">{moment(latestPost.created_at).format("MMMM DD")}</span>
+						<span class="text-sm text-base-content opacity-45">By {latestPost.user.username}</span>
+					</div>
+				</div>
+			</div>
+			<div class="flex flex-col justify-between p-6">
+				<p class="my-0 mb-8 text-lg text-base-content">
+					{thread.description}
+				</p>
+				<span class="text-xs text-base-content opacity-60">Posted {moment(thread.created_at).format("HH:mm, MMMM DD, YYYY")}</span>
+			</div>
+		</div>
+		<div class="flex flex-col">
+			{
+				thread.posts.map((post) => {
+					return (
+						<Post post={post} author={thread.user}></Post>
+					);
+				})
+			}
+		</div>
+		<div class="join mt-4">
+			<a class="no-underline join-item btn bg-base-300 border-base-300">1</a>
+			<a class="no-underline join-item btn bg-base-300 border-base-300">2</a>
+			<a class="no-underline join-item btn bg-base-300 border-base-300">3</a>
+			<a class="no-underline join-item btn bg-base-300 border-base-300">4</a>
+			<a class="no-underline join-item btn bg-base-300 border-base-300">Next</a>
+		</div>
+		<PostThreadComment thread={thread} user={thread.user} client:load></PostThreadComment>
+	</div>
+
+	<div slot="aside">
+		<div class="mt-40 h-16 w-full bg-base-200 relative grid grid-cols-[1fr_300px] justify-between items-center px-6">
+			<h2 class="my-0">News</h2>
+		</div>
+		<div class="bg-base-300">
+			{newThreads.map(newThread => (
+				<a href={`/forums/${newThread.forum.slug}/${newThread.slug}`} class="px-6 py-4 flex flex-row">
+					{newThread.title}
+				</a>
+			))}
+		</div>
+	</div>
+</ForumLayout>

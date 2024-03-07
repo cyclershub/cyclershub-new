@@ -52,6 +52,10 @@ model User {
 	received_messages Message[] @relation("receiver")
 
 	refresh_tokens RefreshToken[]
+
+	posts Post[]
+	threads Thread[]
+	forum_subscriptions ForumSubscription[]
 }
 
 model Review {
@@ -101,6 +105,66 @@ model RefreshToken {
 	token String @unique
 	created_at DateTime @default(now())
 	updated_at DateTime @updatedAt
+
+	user User @relation(fields: [user_id], references: [id])
+	user_id Int
+}
+
+model ForumSubscription {
+	id    Int     @id @default(autoincrement())
+	uid String @unique // @db.Uuid
+	created_at DateTime @default(now())
+	updated_at DateTime @updatedAt
+
+	user User @relation(fields: [user_id], references: [id])
+	user_id Int
+
+	forum Forum @relation(fields: [forum_id], references: [id])
+	forum_id Int
+}
+
+model Forum {
+	id    Int     @id @default(autoincrement())
+	uid String @unique // @db.Uuid
+	title String @unique
+	slug String @unique
+	description String
+	created_at DateTime @default(now())
+	updated_at DateTime @updatedAt
+
+	// One forum can have many threads
+	threads Thread[]
+	subscribers ForumSubscription[]
+}
+
+model Thread {
+	id    Int     @id @default(autoincrement())
+	uid String @unique // @db.Uuid
+	title String
+	slug String @unique
+	description String
+	created_at DateTime @default(now())
+	updated_at DateTime @updatedAt
+
+	// One thread can have many posts
+	posts Post[]
+
+	forum Forum @relation(fields: [forum_id], references: [id])
+	forum_id Int
+
+	user User @relation(fields: [user_id], references: [id])
+	user_id Int
+}
+
+model Post {
+	id    Int     @id @default(autoincrement())
+	uid String @unique // @db.Uuid
+	message String
+	created_at DateTime @default(now())
+	updated_at DateTime @updatedAt
+
+	thread Thread @relation(fields: [thread_id], references: [id])
+	thread_id Int
 
 	user User @relation(fields: [user_id], references: [id])
 	user_id Int

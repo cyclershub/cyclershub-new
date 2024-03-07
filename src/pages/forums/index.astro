@@ -1,0 +1,31 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { refreshAccessToken } from "../../lib/refreshAccessToken";
+
+await refreshAccessToken(Astro);
+---
+
+<Layout title="The CyclersHub">
+	<div class="relative h-[calc(100vh-200px)]">
+		<img src="https://bikepacking.com/wp-content/uploads/2023/09/Kona-Sutra-Review_3.jpg" class="absolute top-0 left-0 object-cover w-screen h-full my-0 brightness-[40%]">
+		<div class="relative top-48 left-0 max-w-screen-xl mx-auto w-full">
+			<h1 class="font-bold text-white mb-2">Forums</h1>
+			<p class="text-white max-w-lg">Discuss with others, share your experiences or just have a chat. The forum is open for anyone.</p>
+			<div class="flex gap-4">
+				<a href="/auth/signup" class="btn btn-md btn-accent">Sign Up</a>
+				<a class="btn btn-md">Learn More</a>
+			</div>
+		</div>
+	</div>
+	<div class="max-w-screen-xl mx-auto">
+		<h2 class="mb-2">Popular</h2>
+		<div class="flex flex-row gap-4">
+			<a class="w-1/4 aspect-square relative group cursor-pointer" href="/forums/bike-parts">
+				<img class="object-cover brightness-75 group-hover:brightness-50 transition-all h-full w-full" src="https://www.siroko.com/blog/c/app/uploads/2022/08/many-different-metal-parts-and-components-of-the-r-2022-08-01-04-40-24-utc.jpeg.webp">
+				<div class="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] opacity-0 group-hover:opacity-100 transition-opacity">
+					<h4 class="text-white">Parts</h4>
+				</div>
+			</a>
+		</div>
+	</div>
+</Layout>
