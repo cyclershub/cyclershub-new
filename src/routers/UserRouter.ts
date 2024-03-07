@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from "uuid";
 import { privateProcedure } from "./middlewares/privateProcedure";
 import { TokenType, signToken } from "../lib/tokens";
 import * as fs from "fs"
+import { sendSignupConfirmationEmail } from "@lib/email/sendSignupConfirmationEmail";
 
 export const UserRouter = t.router({
 	create: t.procedure.input(z.object({
@@ -20,6 +21,33 @@ export const UserRouter = t.router({
 	})).output(z.object({
 		uid: z.string().uuid()
 	})).mutation(async ({input}) => {
+		// Make sure the email or the username doesn't already exist
+		const existingEmail = await prisma.user.findUnique({
+			where: {
+				email: input.email
+			}
+		})
+
+		if (existingEmail) {
+			throw new TRPCError({
+				code: 'BAD_REQUEST',
+				message: 'Email address is already in use.'
+			})
+		}
+
+		const existingUsername = await prisma.user.findUnique({
+			where: {
+				username: input.username
+			}
+		})
+
+		if (existingUsername) {
+			throw new TRPCError({
+				code: 'BAD_REQUEST',
+				message: 'Username has already been taken.'
+			})
+		}
+
 		const uid = uuidv4();
 
 		const avatar = await Avatar.assemble(input.email, AvatarType.Robots, BackgroundType.Landscape);
@@ -46,6 +74,12 @@ export const UserRouter = t.router({
 				message: 'User not created'
 			})
 		}
+
+		const userValidationToken = signToken({ uid: user.uid, exp: moment().add(2, 'days').unix(), typ: TokenType.EmailValidation })
+
+		// We should send a confirmation email
+		const mail = await sendSignupConfirmationEmail(user.email, userValidationToken)
+		// TODO: Make sure the mail was sent successfully
 
 		return { uid };
 	}),

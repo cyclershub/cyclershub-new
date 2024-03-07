@@ -21,7 +21,7 @@ const { title } = Astro.props;
 	</head>
 	<body class="w-full relative min-h-screen">
 		<Header client:only></Header>
-		<main class="prose prose-2xl prose-pre:my-0 prose-pre:py-0 prose-pre:leading-5 w-full max-w-full">
+		<main class="prose md:prose-2xl prose-pre:my-0 prose-pre:py-0 prose-pre:leading-5 w-full max-w-full">
 			<slot />
 		</main>
 		<Footer client:load></Footer>

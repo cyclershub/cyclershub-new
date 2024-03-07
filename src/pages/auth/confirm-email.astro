@@ -1,0 +1,46 @@
+---
+import { prisma } from "@lib/shared";
+import { TokenType, decodeToken } from "@lib/tokens";
+
+const token = Astro.url.searchParams.get('token');
+
+// We expect to receive a JWT in the URL query string that contains the user's uid and a `typ` of `TokenType.EmailValidation`.
+// The JWT has to be signed by us and should not be expired.
+
+if (!token) {
+	return Astro.redirect('/404')
+}
+
+const decoded = decodeToken<{ uid: string, typ: TokenType.EmailValidation}>(token);
+
+if (!decoded.uid || decoded.typ !== TokenType.EmailValidation) {
+	return Astro.redirect('/404')
+}
+
+const user = await prisma.user.findUnique({
+	where: {
+		uid: decoded.uid
+	}
+});
+
+if (!user) {
+	return Astro.redirect('/404')
+}
+
+// If the user is already verified, we don't need to do anything.
+if (user.email_verified) {
+	return Astro.redirect('/404')
+}
+
+// If the user is not verified, we mark them as verified and redirect them to the home page.
+await prisma.user.update({
+	where: {
+		uid: decoded.uid
+	},
+	data: {
+		email_verified: true
+	}
+});
+
+return Astro.redirect('/profile')
+---

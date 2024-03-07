@@ -15,7 +15,7 @@
 				<a class="link link-hover" href="/setups">Explore Setups</a>
 			</nav> 
 			<nav>
-				<header class="footer-title">Company</header> 
+				<header class="footer-title">The CyclersHub</header> 
 				<a class="link link-hover" href="/about">About us</a>
 				<a class="link link-hover" href="/contact">Contact</a>
 			</nav> 

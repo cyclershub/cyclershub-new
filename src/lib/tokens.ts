@@ -2,11 +2,12 @@ import jwt from "jsonwebtoken";
 
 export enum TokenType {
 	Access,
-	Refresh
+	Refresh,
+	EmailValidation
 }
 
 export function decodeToken<T>(token: string): T {
-	return jwt.verify(token, process.env.JWT_SECRET as string) as T;
+	return jwt.verify(token, process.env.JWT_SECRET as string, {ignoreExpiration: false}) as T;
 }
 
 export function signToken<T extends Object>(payload: T): string {

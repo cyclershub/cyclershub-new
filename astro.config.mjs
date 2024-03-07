@@ -9,6 +9,12 @@ export default defineConfig({
   integrations: [tailwind(), svelte()],
   output: "server",
   adapter: node({
-    mode: "standalone"
-  })
+    mode: "middleware"
+  }),
+	vite: {
+		optimizeDeps: {
+			// Avatars is not compatible with Vite since `sharp` uses .node imports that vite doesn't support.
+			exclude: ["@continuum-ai/avatars"]
+		}
+	}
 });
