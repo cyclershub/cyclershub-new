@@ -7,12 +7,12 @@
 </script>
 
 <div class="flex flex-row">
-	<div class="py-6 flex flex-col items-center bg-base-300 border-r border-t border-black px-6 max-w-32 w-full">
+	<div class="py-6 flex flex-col items-center bg-base-200 border-r border-t border-black px-6 max-w-32 w-full">
 		<a class="avatar" href="/profile/{post.user.uid}">
 			<div class="w-16 rounded-full">
 				<img
 					class="my-0"
-					src={post.user.avatar}
+					src={post.user.avatar || "/images/default-avatar.svg"}
 				/>
 			</div>
 		</a>
@@ -27,7 +27,7 @@
 		<span class="text-xs text-base-content opacity-75">{post._count.likes} Likes</span>
 	</div>
 	<div
-		class="bg-base-300 p-6 border-black border-t first-of-type:border-t-0 w-full flex flex-col justify-between gap-4 no-underline cursor-pointer"
+		class="bg-base-200 p-6 border-black border-t first-of-type:border-t-0 w-full flex flex-col justify-between gap-4"
 	>
 		<div class="prose prose-sm text-base-content text-lg my-0 mb-8">
 			{@html post.message}

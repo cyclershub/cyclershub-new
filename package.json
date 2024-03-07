@@ -24,6 +24,7 @@
     "@trpc/server": "^10.45.1",
     "astro": "^4.3.7",
     "buffer": "^6.0.3",
+    "cheerio": "^1.0.0-rc.12",
     "cors": "^2.8.5",
     "express": "^4.18.3",
     "js-cookie": "^3.0.5",
@@ -50,11 +51,12 @@
     "@types/js-cookie": "^3.0.6",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/leaflet": "^1.9.8",
+    "@types/nodemailer": "^6.4.14",
     "@types/password-hash": "^1.2.24",
     "@types/uuid": "^9.0.8",
     "@types/ws": "^8.5.10",
-		"@types/nodemailer": "^6.4.14",
     "daisyui": "latest",
-    "prisma": "^5.9.1"
+    "prisma": "^5.9.1",
+    "puppeteer": "^22.4.0"
   }
 }

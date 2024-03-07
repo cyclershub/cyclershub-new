@@ -52,6 +52,14 @@ model User {
 	sent_messages Message[] @relation("sender")
 	received_messages Message[] @relation("receiver")
 
+	amenity_bicycle_storage Boolean @default(false)
+	amenity_repair_tools Boolean @default(false)
+	amenity_laundry Boolean @default(false)
+	amenity_kitchen Boolean @default(false)
+	amenity_shower Boolean @default(false)
+	amenity_wifi Boolean @default(false)
+	amenity_pets_allowed Boolean @default(false)
+
 	refresh_tokens RefreshToken[]
 
 	posts Post[]

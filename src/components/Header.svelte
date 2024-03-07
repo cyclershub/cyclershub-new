@@ -20,13 +20,13 @@
 			<a href="/about" class="link link-hover">About</a>
 			{#if Cookies.get("accessToken")}
 			{#await trpc.user.getSelf.query()}
-				<div class="w-12 h-12 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-2 skeleton"></div>
+				<div class="w-12 h-12 rounded-full ring-2 ring-primary ring-offset-base-200 ring-offset-2 skeleton"></div>
 			{:then user}
 			<div class="dropdown dropdown-end">
 				<button tabindex="0" class="btn btn-ghost btn-square">
 					<Bell size={24} />
 				</button>
-				<ul tabindex="0" class="dropdown-content z-[1] menu p-4 shadow bg-base-100 rounded-box w-72">
+				<ul tabindex="0" class="dropdown-content z-[1] menu p-4 shadow bg-base-200 rounded-box w-72">
 					<p>There are no new notifications!</p>
 				</ul>
 			</div>
@@ -36,7 +36,7 @@
 							<img src={user.avatar} class="avatar rounded-full w-12 h-12 object-cover">
 						</div>
 				</div>
-				<ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+				<ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-200 rounded-box w-52">
 					<li><a href="/profile">My Profile</a></li>
 					<li><a href="/profile/messages">Messages</a></li>
 					<li><a href="/profile/settings">Settings</a></li>

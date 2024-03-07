@@ -1,7 +1,6 @@
 <script lang="ts">
 	import type { User } from "@prisma/client";
 	import countries from "../lib/countries.json";
-	import amenities from "../lib/amenities.json";
 	import LocationMap from "../components/LocationMap.svelte";
 	import { Person, EnvelopeClosed, Camera } from "radix-svelte-icons"
 	import trpc from "../trpc"
@@ -77,13 +76,13 @@
 			<button class="relative group cursor-pointer h-72 w-full" on:click={() => {
 				bannerFileInput.click()
 			}}>
-				<img src={profile.banner} class="my-0 rounded-tr-lg rounded-tl-lg group-hover:brightness-50 transition-all h-72 w-full object-cover">
+				<img src={profile.banner} class="my-0 not-prose rounded-tr-lg rounded-tl-lg group-hover:brightness-50 transition-all h-72 w-full object-cover">
 				<div class="absolute left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] opacity-0 group-hover:opacity-100 transition-opacity">
 					<Camera size={72} color="#aaa" />
 				</div>
 				<input type="file" class="hidden" on:change={uploadBanner} bind:this={bannerFileInput}>
 			</button>
-			<img src={profile.avatar} class="my-0 rounded-full w-56 h-56 object-cover absolute left-[50%] bottom-0 translate-x-[-50%] translate-y-[50%] border-4 border-primary">
+			<img src={profile.avatar} class="my-0 not-prose rounded-full w-56 h-56 object-cover absolute left-[50%] bottom-0 translate-x-[-50%] translate-y-[50%] border-4 border-primary">
 		</div>
 		<div class="p-4">
 			<h4 class="mt-24">Personal Details</h4>
@@ -165,16 +164,26 @@
 		</div>
 		<h4>Hosting Amenities</h4>
 		<div class="flex flex-row flex-wrap gap-4">
-			{#each amenities as amenity}
-				<div class="form-control">
-					<label class="label cursor-pointer items-center gap-2">
-						<input type="checkbox" checked={amenity.db} class="checkbox checkbox-xs" />
-						<div class="tooltip h-11" data-tip={amenity.description}>
-							<span class="label-text">{amenity.name}</span>
-						</div>
-					</label>
-				</div>
-			{/each}
+			<div class="form-control">
+				<label class="label cursor-pointer items-center gap-2">
+					<input type="checkbox" checked={profile.amenity_bicycle_storage} class="checkbox checkbox-xs" />
+					<div class="tooltip h-11" data-tip="You can store your bike at my place if i've got room for it.">
+						<span class="label-text">Bicycle Storage</span>
+					</div>
+				</label>
+				<label class="label cursor-pointer items-center gap-2">
+					<input type="checkbox" checked={profile.amenity_kitchen} class="checkbox checkbox-xs" />
+					<div class="tooltip h-11" data-tip="You can use my kitchen if you want to.">
+						<span class="label-text">Kitchen</span>
+					</div>
+				</label>
+				<label class="label cursor-pointer items-center gap-2">
+					<input type="checkbox" checked={profile.amenity_laundry} class="checkbox checkbox-xs" />
+					<div class="tooltip h-11" data-tip="You can do your laundry.">
+						<span class="label-text">Laundry</span>
+					</div>
+				</label>
+			</div>
 		</div>
 		<div class="flex flex-row justify-end mt-12">
 			<button class="btn btn-success text-white" on:click={update}>Save Changes</button>

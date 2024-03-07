@@ -4,8 +4,8 @@ export async function sendSignupConfirmationEmail(email: string, token: string) 
 	const transport = nodemailer.createTransport({
 		service: "gmx",
 		auth: {
-			user: "moritz.utcke@gmx.de",
-			pass: "Geiloboy1"
+			user: "",
+			pass: ""
 		}
 	});
 

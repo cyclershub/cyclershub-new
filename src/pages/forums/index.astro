@@ -4,6 +4,7 @@ import ForumLayout from "../../layouts/ForumLayout.astro";
 import { refreshAccessToken } from "../../lib/refreshAccessToken";
 import { Bookmark, EyeOpen, Pencil1, Person } from "radix-svelte-icons";
 import moment from "moment";
+import NewsTicker from "@components/NewsTicker.svelte";
 
 await refreshAccessToken(Astro);
 
@@ -70,22 +71,6 @@ const newThreads = await prisma.thread.findMany({
 		}
 	</div>
 	<div slot="aside">
-		<div
-			class="mt-16 h-16 w-full bg-base-200 relative grid grid-cols-[1fr_300px] justify-between items-center px-6"
-		>
-			<h2 class="my-0">News</h2>
-		</div>
-		<div class="bg-base-300">
-			{
-				newThreads.map((newThread) => (
-					<a
-						href={`/forums/${newThread.forum.slug}/${newThread.slug}`}
-						class="px-6 py-4 flex flex-row"
-					>
-						{newThread.title}
-					</a>
-				))
-			}
-		</div>
+		<NewsTicker client:only></NewsTicker>
 	</div>
 </ForumLayout>

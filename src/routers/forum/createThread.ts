@@ -4,6 +4,7 @@ import slugify from "slugify";
 import { prisma } from "../../lib/shared";
 import { TRPCError } from "@trpc/server";
 import { v4 } from "uuid";
+import { threadEventEmitter } from "./news";
 
 export const createThreadProcedure = privateProcedure
 	.input(
@@ -70,6 +71,8 @@ export const createThreadProcedure = privateProcedure
 				},
 			},
 		});
+
+		threadEventEmitter.emit("add", thread)
 
 		return { uid: thread.uid };
 	});
