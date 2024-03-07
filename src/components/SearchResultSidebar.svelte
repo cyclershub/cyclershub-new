@@ -24,7 +24,7 @@
 	<p>{focused.biography}</p>
 
 	<div class="flex gap-4">
-		<button class="btn"><ChatBubble size={20} /> Send Message</button>
+		<a class="btn no-underline" href="/profile/{focused.username}/chat"><ChatBubble size={20} /> Send Message</a>
 		<button class="btn btn-square p-1" title="Instagram"><InstagramLogo size={20} /></button>
 		<button class="btn btn-square p-1" title="Email"><EnvelopeOpen size={20} /></button>
 	</div>

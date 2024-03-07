@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { prisma } from "./shared";
-import { decodeToken } from "./tokens";
+import { TokenType, decodeToken } from "./tokens";
 
 export async function validateAuthorization(authorization: string | null) {
 	if (!authorization) {
@@ -23,11 +23,11 @@ export async function validateAuthorization(authorization: string | null) {
 	try {
 		// Wenn der Token von uns erstellt wurde (und returnnicht manipuliert wurde), dann ist er valide und wir können ihn decodieren.
 		// Andernfalls wird eine Exception geworfen.
-		const token = decodeToken<{ uid: string }>(stringToken)
+		const token = decodeToken<{ uid: string, typ: TokenType }>(stringToken)
 		
 		const uid = token.uid;
 
-		if (!uid) {
+		if (!uid || token.typ !== TokenType.Access) {
 			throw new TRPCError({ code: "UNAUTHORIZED", message: "Invalid token" });
 		}
 

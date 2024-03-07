@@ -1,15 +1,13 @@
 import { z } from "zod";
 import { t } from "./context";
 import { prisma } from "../lib/shared";
-import jwt from 'jsonwebtoken'
 import { TRPCError } from "@trpc/server";
 //import { Avatar, AvatarType, BackgroundType } from "@continuum-ai/avatars";
 import moment from "moment";
 import passwordHash from "password-hash"
 import { v4 as uuidv4 } from "uuid";
-import { validateJsonWebToken } from "../lib/validateJsonWebToken";
 import { privateProcedure } from "./middlewares/privateProcedure";
-import { decodeToken } from "../lib/tokens";
+import { TokenType, signToken } from "../lib/tokens";
 
 export const UserRouter = t.router({
 	create: t.procedure.input(z.object({
@@ -156,7 +154,7 @@ export const UserRouter = t.router({
 
 		const expires = moment().add(7, 'days').unix();
 
-		const refreshToken = jwt.sign({ uid: user.uid, exp: expires }, process.env.JWT_SECRET)
+		const refreshToken = signToken({ uid: user.uid, exp: expires, typ: TokenType.Refresh })
 
 		await prisma.refreshToken.create({
 			data: {
@@ -175,9 +173,11 @@ export const UserRouter = t.router({
 		refreshToken: z.string(),
 	})).output(z.object({
 		accessToken: z.string(),
-		expires: z.number()
+		refreshToken: z.string(),
+		accessTokenExpiryTimestampMs: z.number(),
+		refreshTokenExpiryTimestampMs: z.number()
 	})).query(async ({input}) => {
-		const dbToken = prisma.refreshToken.findUnique({
+		const dbToken = await prisma.refreshToken.findUnique({
 			where: {
 				token: input.refreshToken
 			}
@@ -190,11 +190,16 @@ export const UserRouter = t.router({
 			})
 		}
 
-		const decoded = decodeToken<{ uid: string }>(input.refreshToken)
-
 		const user = await prisma.user.findUnique({
 			where: {
-				uid: decoded.uid
+				id: dbToken.user_id
+			}
+		})
+
+		// Invalidate the refresh token and rotate it
+		await prisma.refreshToken.delete({
+			where: {
+				token: input.refreshToken
 			}
 		})
 
@@ -205,11 +210,25 @@ export const UserRouter = t.router({
 			})
 		}
 
-		const expires = moment().add(1, 'hour').unix();
+		// Generate a new refresh token
+		const refreshTokenExpiryTimestampMs = moment().add(7, 'days').unix();
+		const refreshToken = signToken({ uid: user.uid, exp: refreshTokenExpiryTimestampMs, typ: TokenType.Refresh })
 
-		const accessToken = jwt.sign({ uid: user.uid, exp: expires }, process.env.JWT_SECRET)
+		await prisma.refreshToken.create({
+			data: {
+				token: refreshToken,
+				user: {
+					connect: {
+						id: user.id
+					}
+				}
+			}
+		})
 
-		return { accessToken, expires }
+		const accessTokenExpiryTimestampMs = moment().add(1, 'hour').unix();
+		const accessToken = signToken({ uid: user.uid, exp: accessTokenExpiryTimestampMs, typ: TokenType.Access })
+
+		return { accessToken, refreshToken, accessTokenExpiryTimestampMs, refreshTokenExpiryTimestampMs }
 	}),
 	update: privateProcedure.input(z.object({
 		email: z.string().optional(),

@@ -62,7 +62,7 @@
 </script>
 
 <div class="min-h-screen mx-auto max-w-screen-xl my-8 grid grid-cols-[1fr_3fr] gap-4">
-	<div class="border border-base-300 rounded-lg p-4 gap-2 flex flex-col">
+	<div class="border border-base-300 bg-base-200 rounded-lg p-4 gap-2 flex flex-col">
 		<a href="" class="flex flex-row gap-4 items-center text-lg no-underline btn btn-ghost justify-start">
 			<Person size={24} />
 			Profile
@@ -72,7 +72,7 @@
 			Messages
 		</a>
 	</div>
-	<div class="border border-base-300 rounded-lg">
+	<div class="border border-base-300 bg-base-200 rounded-lg">
 		<div class="relative">
 			<button class="relative group cursor-pointer h-72 w-full" on:click={() => {
 				bannerFileInput.click()

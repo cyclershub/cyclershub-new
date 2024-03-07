@@ -1,5 +1,8 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { refreshAccessToken } from "../lib/refreshAccessToken";
+
+await refreshAccessToken(Astro);
 ---
 
 <Layout title="The CyclersHub">
@@ -42,6 +45,9 @@ import Layout from '../layouts/Layout.astro';
 				</div>
 			</a>
 		</div>
+	</div>
+	<div class="max-w-screen-xl mx-auto">
+		<h2>How it works</h2>
 	</div>
 	
 </Layout>

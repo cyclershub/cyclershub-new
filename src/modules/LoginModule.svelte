@@ -26,9 +26,12 @@
 		}
 
 		Cookies.set("accessToken", accessTokenRequest.accessToken, {
-			expires: 7,
+			expires: accessTokenRequest.accessTokenExpiryTimestampMs,
 		})
 
+		Cookies.set("refreshToken", refreshTokenRequest.refreshToken, {
+			expires: 7,
+		})
 
 		location.href = "/profile";
 	}

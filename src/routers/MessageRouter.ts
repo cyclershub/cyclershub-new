@@ -196,7 +196,7 @@ export const MessageRouter = t.router({
 			orderBy: {
 				created_at: 'asc'
 			},
-			distinct: ['receiver_id', 'sender_id'],
+			distinct: "receiver_id",
 			include: {
 				receiver: true,
 				sender: true

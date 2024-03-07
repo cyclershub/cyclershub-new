@@ -1,11 +1,12 @@
 import jwt from "jsonwebtoken";
 import moment from "moment";
+import { TokenType, decodeToken } from "./tokens";
 
 export function verifyAccessToken(accessToken: string): boolean {
 	try {
-		const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+		const decoded = decodeToken<{ uid: string, exp: number, typ: TokenType }>(accessToken);
 
-		if (!decoded.exp || decoded.exp < moment().unix()) {
+		if (!decoded.exp || decoded.exp < moment().unix() || decoded.typ !== TokenType.Access) {
 			return false;
 		}
 
