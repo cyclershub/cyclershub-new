@@ -56,6 +56,7 @@ model User {
 	posts Post[]
 	threads Thread[]
 	forum_subscriptions ForumSubscription[]
+	post_likes PostLike[]
 }
 
 model Review {
@@ -132,6 +133,10 @@ model Forum {
 	created_at DateTime @default(now())
 	updated_at DateTime @updatedAt
 
+	views Int @default(0)
+
+	banner String?
+
 	// One forum can have many threads
 	threads Thread[]
 	subscribers ForumSubscription[]
@@ -145,6 +150,8 @@ model Thread {
 	description String
 	created_at DateTime @default(now())
 	updated_at DateTime @updatedAt
+
+	views Int @default(0)
 
 	// One thread can have many posts
 	posts Post[]
@@ -168,4 +175,18 @@ model Post {
 
 	user User @relation(fields: [user_id], references: [id])
 	user_id Int
+
+	likes PostLike[]
+}
+
+model PostLike {
+	id    Int     @id @default(autoincrement())
+	uid String @unique // @db.Uuid
+	created_at DateTime @default(now())
+
+	user User @relation(fields: [user_id], references: [id])
+	user_id Int
+
+	post Post @relation(fields: [post_id], references: [id])
+	post_id Int
 }

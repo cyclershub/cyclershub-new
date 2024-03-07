@@ -2,6 +2,7 @@
 import ProfileModule from '../../modules/ProfileModule.svelte';
 import Layout from '../../layouts/Layout.astro';
 import { prisma } from '../../lib/shared';
+import { validateJsonWebToken } from '../../lib/validateJsonWebToken';
 
 const reviews = await prisma.review.findMany({
 	where: {
@@ -14,11 +15,7 @@ const reviews = await prisma.review.findMany({
 	}
 })
 
-const profile = await prisma.user.findUnique({
-	where: {
-		id: 1
-	}
-})
+const profile = await validateJsonWebToken(Astro.cookies.get("accessToken").value)
 ---
 
 <Layout title="The CyclersHub">

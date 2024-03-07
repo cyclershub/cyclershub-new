@@ -2,12 +2,13 @@ import { z } from "zod";
 import { t } from "./context";
 import { prisma } from "../lib/shared";
 import { TRPCError } from "@trpc/server";
-//import { Avatar, AvatarType, BackgroundType } from "@continuum-ai/avatars";
+import { Avatar, AvatarType, BackgroundType } from "@continuum-ai/avatars";
 import moment from "moment";
 import passwordHash from "password-hash"
 import { v4 as uuidv4 } from "uuid";
 import { privateProcedure } from "./middlewares/privateProcedure";
 import { TokenType, signToken } from "../lib/tokens";
+import * as fs from "fs"
 
 export const UserRouter = t.router({
 	create: t.procedure.input(z.object({
@@ -19,13 +20,13 @@ export const UserRouter = t.router({
 	})).output(z.object({
 		uid: z.string().uuid()
 	})).mutation(async ({input}) => {
-		//const avatar = await Avatar.assemble(input.email, AvatarType.Robots, BackgroundType.Landscape);
-
-		//const buffer = await avatar.toBuffer();
-
-		//fs.writeFileSync(`public/avatars/${input.email}.png`, buffer);
-
 		const uid = uuidv4();
+
+		const avatar = await Avatar.assemble(input.email, AvatarType.Robots, BackgroundType.Landscape);
+
+		const buffer = await avatar.toBuffer();
+
+		fs.writeFileSync(`./persistent/images/${uid}.jpeg`, buffer);
 
 		const user = await prisma.user.create({
 			data: {
@@ -34,7 +35,8 @@ export const UserRouter = t.router({
 				last_name: input.last_name,
 				email: input.email,
 				password: passwordHash.generate(input.password),
-				username: input.username
+				username: input.username,
+				avatar: `/api/image/${uid}`
 			}
 		})
 

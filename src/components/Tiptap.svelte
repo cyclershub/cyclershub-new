@@ -1,12 +1,14 @@
-<script>
+<script lang="ts">
 	import { onMount, onDestroy } from "svelte";
 	import { Editor } from "@tiptap/core";
 	import StarterKit from "@tiptap/starter-kit";
 	import Placeholder from "@tiptap/extension-placeholder";
 	import {FontBold, FontItalic, FontRoman} from "radix-svelte-icons";
 
-	let element;
-	let editor;
+	let element: HTMLDivElement;
+	let editor: Editor;
+
+	export let tiptap: any;
 
 	Placeholder.configure({
 		placeholder: "Write something...",
@@ -21,6 +23,8 @@
 				editor = editor;
 			},
 		});
+
+		tiptap = editor;
 	});
 
 	onDestroy(() => {

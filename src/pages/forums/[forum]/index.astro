@@ -1,9 +1,9 @@
 ---
 import { ChatBubble } from "radix-svelte-icons";
-import Layout from "../../../layouts/Layout.astro";
 import { refreshAccessToken } from "../../../lib/refreshAccessToken";
 import { prisma } from "../../../lib/shared";
 import moment from "moment";
+import ForumLayout from "../../../layouts/ForumLayout.astro";
 
 const forumName = Astro.params.forum;
 
@@ -33,15 +33,24 @@ const threads = await prisma.thread.findMany({
 	},
 });
 
+await prisma.forum.update({
+	where: {
+		id: forum.id,
+	},
+	data: {
+		views: {
+			increment: 1,
+		},
+	},
+});
+
 await refreshAccessToken(Astro);
 ---
 
-<Layout title="The CyclersHub">
-	<div
-		class="relative flex items-center pt-16 pb-8 justify-center flex-col text-center bg-base-300"
-	>
-		<h1 class="font-bold text-base-content mb-2">{forum.title}</h1>
-		<p class="text-base-content max-w-lg">{forum.description}</p>
+<ForumLayout title="The CyclersHub">
+	<div class="my-16">
+		<h1 class="font-bold text-base-content text-4xl mb-2">{forum.title}</h1>
+		<p class="text-base-content max-w-lg text-xl">{forum.description}</p>
 	</div>
 	<div class="max-w-screen-xl mx-auto pb-16 pt-0">
 		<h2 class="mb-4 text-base-content">Recent Threads</h2>
@@ -83,4 +92,4 @@ await refreshAccessToken(Astro);
 			}
 		</div>
 	</div>
-</Layout>
+</ForumLayout>
