@@ -14,8 +14,8 @@ app.listen(80, function() {
 	console.log('Server started on http://localhost:80');
 });
 
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/meta-lang.com/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/meta-lang.com/cert.pem', 'utf8');
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/cyclershub.com/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/cyclershub.com/cert.pem', 'utf8');
 
 if (privateKey && certificate) {
 	https.createServer({
