@@ -13,7 +13,7 @@
 		});
 	}
 
-	export let users: User & { incoming_reviews: Review[] };
+	export let users:  any/* User & { incoming_reviews: Review[] }*/;
 
 	function createMarker(marker: User & { incoming_reviews: Review[] }) {
 		let icon = markerIcon();

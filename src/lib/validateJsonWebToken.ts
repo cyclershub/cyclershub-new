@@ -5,7 +5,7 @@ import type { User } from "@prisma/client";
 
 export async function validateJsonWebToken(accessToken: string): Promise<User | never> {
 	try {
-		const decoded = jwt.verify(accessToken, process.env.JWT_SECRET);
+		const decoded = jwt.verify(accessToken, process.env.JWT_SECRET) as { uid: string };
 
 		const user = await prisma.user.findUnique({
 			where: {

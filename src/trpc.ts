@@ -8,23 +8,24 @@ const wsClient = createWSClient({
 })
 
 export default createTRPCProxyClient<AppRouter>({
-  links: [
-    httpBatchLink({
-      url: 'http://localhost:3002/',
+	links: [
+		httpBatchLink({
+			url: 'http://localhost:3002/',
 			headers() {
 				const accessToken = Cookies.get('accessToken');
 				if (!accessToken) return {};
 
 				const buffer = Buffer.from(accessToken, 'utf-8');
-				const base64 = buffer.toString('base64')
+				const base64 = buffer.toString('base64');
 
-        return {
-          'Authorization': `Bearer ${base64}`,
-        };
+				return {
+					'Authorization': `Bearer ${base64}`,
+				};
 			}
-    }),
+		}),
 		wsLink({
 			client: wsClient
 		}),
-  ],
+	],
+	transformer: undefined
 });
