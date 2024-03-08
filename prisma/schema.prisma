@@ -65,6 +65,7 @@ model User {
 	posts Post[]
 	threads Thread[]
 	forum_subscriptions ForumSubscription[]
+	thread_subscriptions ThreadSubscription[]
 	post_likes PostLike[]
 }
 
@@ -121,7 +122,6 @@ model RefreshToken {
 }
 
 model ForumSubscription {
-	id    Int     @id @default(autoincrement())
 	uid String @unique // @db.Uuid
 	created_at DateTime @default(now())
 	updated_at DateTime @updatedAt
@@ -131,6 +131,22 @@ model ForumSubscription {
 
 	forum Forum @relation(fields: [forum_id], references: [id])
 	forum_id Int
+
+	@@id([user_id, forum_id])
+}
+
+model ThreadSubscription {
+	uid String @unique // @db.Uuid
+	created_at DateTime @default(now())
+	updated_at DateTime @updatedAt
+
+	user User @relation(fields: [user_id], references: [id])
+	user_id Int
+
+	thread Thread @relation(fields: [thread_id], references: [id])
+	thread_id Int
+
+	@@id([user_id, thread_id])
 }
 
 model Forum {
@@ -164,6 +180,7 @@ model Thread {
 
 	// One thread can have many posts
 	posts Post[]
+	subscribers ThreadSubscription[]
 
 	forum Forum @relation(fields: [forum_id], references: [id])
 	forum_id Int

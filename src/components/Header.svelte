@@ -5,7 +5,7 @@
 	import Cookies from "js-cookie";
 </script>
 
-<nav class="navbar bg-base-100 border-b-2 border-b-base-200 h-20 sticky top-0 z-10">
+<nav class="navbar bg-base-100 border-b-2 border-b-base-200 h-12 sticky top-0 z-10">
 	<div class="flex flex-row justify-between w-full mx-auto px-6">
 		<a href="/" class="link link-hover text-xl hidden md:block">
 			<img src="/images/logo.svg" width="96" alt="META">

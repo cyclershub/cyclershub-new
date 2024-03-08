@@ -23,15 +23,7 @@
 </script>
 
 <div class="bg-base-100 py-6">
-	<div class="flex flex-row items-start">
-		<div class="avatar mx-6">
-			<div class="w-16 rounded-full">
-				<img
-					class="my-0"
-					src={user.avatar}
-				/>
-			</div>
-		</div>
+	<div class="flex flex-col md:flex-row w-full items-start">
 		<Tiptap bind:tiptap={tiptapref}></Tiptap>
 		<button class="btn btn-ghost ml-4" on:click={postComment}><PaperPlane size={20}></PaperPlane></button>
 	</div>

@@ -4,6 +4,9 @@ import { refreshAccessToken } from "../../../lib/refreshAccessToken";
 import { prisma } from "../../../lib/shared";
 import moment from "moment";
 import ForumLayout from "../../../layouts/ForumLayout.astro";
+import ThreadPreview from "@components/ThreadPreview.svelte"
+import MobileForumFooter from "@components/MobileForumFooter.svelte"
+import { validateJsonWebToken } from "@lib/validateJsonWebToken";
 
 const forumName = Astro.params.forum;
 
@@ -44,52 +47,42 @@ await prisma.forum.update({
 	},
 });
 
+let user = {};
+
+if (Astro.cookies.has("accessToken")) {
+	user = await validateJsonWebToken(Astro.cookies.get("accessToken").value);
+}
+
 await refreshAccessToken(Astro);
 ---
 
 <ForumLayout title="The CyclersHub">
-	<div class="my-16">
-		<h1 class="font-bold text-base-content text-4xl mb-2">{forum.title}</h1>
-		<p class="text-base-content max-w-lg text-xl">{forum.description}</p>
+	<div class="p-6 relative h-64">
+		<img src={forum.banner} class="absolute top-0 left-0 w-full h-full my-0 brightness-50 object-cover">
+		<div class="absolute top-[50%] translate-y-[-50%] left-0 p-6">
+			<h1 class="font-bold  text-4xl mb-2 text-white">{forum.title}</h1>
+		<p class="max-w-lg text-xl text-white">{forum.description}</p>
+		</div>
 	</div>
-	<div class="max-w-screen-xl mx-auto pb-16 pt-0">
-		<h2 class="mb-4 text-base-content">Recent Threads</h2>
+	<div class="text-sm breadcrumbs">
+		<ul class="flex flex-row flex-wrap px-6 mb-0">
+			<li class="text-wrap"><a href="/forums">Forums</a></li>
+			<li class="text-wrap">{forum.title}</li>
+		</ul>
+	</div>
+	<div class="max-w-screen-xl mx-auto p-6">
+		<h2 class="mb-4 text-base-content mt-0">Recent Threads</h2>
 		<div class="flex flex-col gap-4">
 			{
 				threads.map((thread) => {
 					return (
-						<a class="bg-base-300 p-8 rounded-lg w-full flex flex-row gap-4 no-underline cursor-pointer" href={`/forums/${forumName}/${thread.slug}`}>
-							
-								<div class="flex flex-col gap-2 items-center">
-									<div class="avatar">
-										<div class="w-12 rounded-full">
-											<img
-												class="my-0"
-												src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
-											/>
-										</div>
-									</div>
-									<span class="text-sm text-base-content flex gap-2">
-										<ChatBubble size={18} />{" "}
-										{thread._count.posts}
-									</span>
-								</div>
-								<div>
-									<div class="flex flex-col">
-										<span class="text-base-content text-sm">{moment(thread.created_at).format("MMMM DD Y")}</span>
-										<h3 class="font-bold text-base-content text-2xl my-0">
-										{thread.title}
-									</h3>
-										</div>
-									
-									<p class="text-base-content text-lg my-0 mt-2">
-										{thread.description}
-									</p>
-								</div>
-						</a>
+						<ThreadPreview thread={thread} forumName={forumName} client:load></ThreadPreview>
 					);
 				})
 			}
 		</div>
+	</div>
+	<div slot="footer">
+		<MobileForumFooter user={user} client:load></MobileForumFooter>
 	</div>
 </ForumLayout>

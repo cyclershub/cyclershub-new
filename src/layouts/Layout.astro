@@ -1,11 +1,21 @@
 ---
+import MobileFooter from '@components/MobileFooter.svelte';
 import Footer from '../components/Footer.svelte';
 import Header from '../components/Header.svelte';
 import "../style/global.css"
+import "svelte-ripple-action/ripple.css";
+import { validateJsonWebToken } from '@lib/validateJsonWebToken';
 
 interface Props {
 	title: string;
 }
+
+let user = null;
+
+if (Astro.cookies.has("accessToken")) {
+	const accessToken = Astro.cookies.get("accessToken").value;
+	user = await validateJsonWebToken(accessToken);
+} 
 
 const { title } = Astro.props;
 ---
@@ -24,6 +34,7 @@ const { title } = Astro.props;
 		<main class="prose md:prose-2xl prose-pre:my-0 prose-pre:py-0 prose-pre:leading-5 w-full max-w-full">
 			<slot />
 		</main>
+		<MobileFooter user={user} client:load/>
 		<Footer client:load></Footer>
 	</body>
 </html>

@@ -48,7 +48,7 @@
 </script>
 
 <main
-	class="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-w-sm"
+	class="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] max-w-sm w-full px-6"
 >
 	<h4>Login</h4>
 	<hr class="mb-8" />

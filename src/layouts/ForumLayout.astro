@@ -1,12 +1,20 @@
 ---
 import Footer from '../components/Footer.svelte';
 import Header from '../components/Header.svelte';
-import ForumHeader from '../components/ForumHeader.svelte';
 import "../style/global.css"
+import { validateJsonWebToken } from '@lib/validateJsonWebToken';
+import "svelte-ripple-action/ripple.css";
 
 interface Props {
 	title: string;
 }
+
+let user = null;
+
+if (Astro.cookies.has("accessToken")) {
+	const accessToken = Astro.cookies.get("accessToken").value;
+	user = await validateJsonWebToken(accessToken);
+} 
 
 const { title } = Astro.props;
 ---
@@ -21,16 +29,16 @@ const { title } = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body class="w-full relative min-h-screen">
-		<img class="w-full h-96 object-cover" src="https://i0.wp.com/delraybeachbicycles.com/wp-content/uploads/2019/02/Biking-by-the-Beach.jpg?fit=1200%2C800&ssl=1" alt="">
-		<ForumHeader client:only></ForumHeader>
-		<main class="prose prose-sm prose-pre:my-0 prose-pre:py-0 prose-pre:leading-5 w-full max-w-screen-2xl mx-auto grid grid-cols-[auto_400px] gap-8">
+		<Header client:only></Header>
+		<main class="prose prose-sm prose-pre:my-0 prose-pre:py-0 prose-pre:leading-5 w-full max-w-screen-2xl mx-auto grid grid-cols-1 lg:grid-cols-[auto_400px] gap-8">
 			<article>
 				<slot />
 			</article>
-			<aside class="sticky top-0 h-screen">
+			<aside class="sticky top-0 max-h-screen">
 				<slot name="aside"></slot>
 			</aside>
 		</main>
+		<slot name="footer"></slot>
 		<Footer client:load></Footer>
 	</body>
 </html>

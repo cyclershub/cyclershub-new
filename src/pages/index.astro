@@ -8,12 +8,12 @@ await refreshAccessToken(Astro);
 <Layout title="The CyclersHub">
 	<div class="relative h-[calc(100vh-200px)]">
 		<img src="https://bikepacking.com/wp-content/uploads/2023/09/Kona-Sutra-Review_3.jpg" class="absolute top-0 left-0 object-cover w-screen h-full brightness-[40%] not-prose">
-		<div class="relative top-48 left-0 max-w-screen-xl mx-auto w-full">
+		<div class="relative top-[50%] translate-y-[-50%] left-0 p-6 max-w-screen-xl mx-auto w-full">
 			<h1 class="font-bold text-white mb-2">The CyclersHub</h1>
 			<p class="text-white max-w-lg">Explore the wide-open with other like-minded people from around the globe! Find routes and hosts in other countries and go on an adventure with your favorite two-wheeled companion.</p>
 			<div class="flex gap-4">
-				<a href="/auth/signup" class="btn btn-md btn-accent">Sign Up</a>
-				<a href="/about" class="btn btn-md">About Us</a>
+				<a href="/auth/signup" class="btn btn-md no-underline btn-accent">Sign Up</a>
+				<a href="/about" class="btn btn-md no-underline">About Us</a>
 			</div>
 		</div>
 	</div>
@@ -46,8 +46,9 @@ await refreshAccessToken(Astro);
 			</a>
 		</div>
 	</div>
-	<div class="max-w-screen-xl mx-auto">
-		<h2>How it works</h2>
+	<div class="max-w-screen-xl mx-auto px-6 py-6">
+		<h2 class="mb-2 mt-8">How it works</h2>
+
 	</div>
 	
 </Layout>
